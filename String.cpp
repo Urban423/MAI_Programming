@@ -6,27 +6,42 @@
 
 String::String()
 {
-    str = nullptr;
-    size = 0;
+    str = new char[1];
+    str[0] = '\0';
+    size = 1;
 }
 
-String::String(const char* str)
+String::String(const char* string)
 {
     size = 0;
     unsigned int i = 0;
     while (1)
     {
         this->size++;
-        if (str[i] == '\0')
+        if (string[i] == '\0')
         {
             break;
         }
         i++;
     }
-    this->str = new char[size];
-    for (int i = 0; i < this->size; i++)
+    str = new char[size];
+    for (int i = 0; i < size ; i++)
     {
-        this->str[i] = str[i];
+        str[i] = string[i];
+    }
+}
+
+String::String(const String& string)
+{
+    size = string.size;
+    if (str != nullptr)
+    {
+        delete[] str;
+    }
+    str = new char[size];
+    for (unsigned int i = 0; i < size; i++)
+    {
+        str[i] = string.str[i];
     }
 }
 
@@ -48,6 +63,39 @@ unsigned int String::getSize()
     return size;
 }
 
+
+char String::toInteger(int& number)
+{
+    number = 0;
+    bool flag = 0; 
+    unsigned int i = 0;
+    if (str[0] == '-')
+    {
+        i++;
+        flag = 1;
+    }
+    for (; i < size - 1; i++)
+    {
+        if (is_number(str[i]) == 1)
+        {
+            number *= 10;
+            number += str[i] - 48;
+        }
+        else
+        {
+            printf("couldn't convert from string to Integer!\n");
+            return 0;
+        }
+    }
+    if (flag)
+    {
+        number *= -1;
+    }
+
+    return 1;
+}
+
+/*
 char String::toInteger(unsigned int& number)
 {
     number = 0;
@@ -65,7 +113,7 @@ char String::toInteger(unsigned int& number)
         }
     }
     return 1;
-}
+}*/
 
 char String::split(char**& buffer, unsigned int& buffer_size, unsigned char split_letter)
 {
@@ -77,13 +125,21 @@ char String::split(char**& buffer, unsigned int& buffer_size, unsigned char spli
     {
         if (str[i] == '\0')
         {
-            buffer_size++;
+            if (flag)
+            {
+                buffer_size++;
+            }
         }
-        if (str[i] == split_letter && flag)
+
+        if (str[i] == split_letter)
         {
-            flag = 0;
-            buffer_size++;
-        }else
+            if (flag)
+            {
+                flag = 0;
+                buffer_size++;
+            }
+        }
+        else
         {
             flag = 1;
         }
@@ -96,6 +152,7 @@ char String::split(char**& buffer, unsigned int& buffer_size, unsigned char spli
             int sizer = i - first_index;
             if (sizer == 0)
             {
+                first_index = i + 1;
                 continue;
             }
             buffer[index] = new char[sizer + 1];
@@ -270,4 +327,28 @@ bool String::operator==(const char* str2)
         }
     }
     return 1;
+}
+
+void String::operator=(const char* string)
+{
+    if (str != nullptr)
+    {
+        delete[] str;
+    }
+    size = 0;
+    unsigned int i = 0;
+    while (1)
+    {
+        this->size++;
+        if (string[i] == '\0')
+        {
+            break;
+        }
+        i++;
+    }
+    str = new char[size];
+    for (int i = 0; i < size; i++)
+    {
+        str[i] = string[i];
+    }
 }
