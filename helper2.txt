@@ -1,0 +1,233 @@
+#include "helper.h"
+#include <conio.h>
+#include <stdio.h>
+
+
+custom_list::custom_list(char elelemen)
+{
+    element = elelemen;
+    next = nullptr;
+}
+
+void custom_list::add(char elelement)
+{
+    if (next == nullptr)
+    {
+        next = new custom_list(elelement);
+        return;
+    }
+    next->add(elelement);
+}
+
+void custom_list::SetNext(custom_list* new_link)
+{
+    next = new_link;
+}
+
+void custom_list::removeLast(custom_list* previous)
+{
+    if (next == nullptr)
+    {
+        if (previous != nullptr)
+        {
+            previous->SetNext(nullptr);
+        }
+        delete this;
+        return;
+    }
+    next->removeLast(this);
+}
+
+char custom_list::get()
+{
+    return element;
+}
+
+custom_list* custom_list::getNext()
+{
+    return next;
+}
+
+void custom_list::deleteList()
+{
+    if (next)
+    {
+        next->deleteList();
+    }
+    delete this;
+}
+
+custom_list::~custom_list() { };
+
+
+char writeText(char*& buffer, size_t& size)
+{
+    if (buffer != nullptr)
+    {
+        delete[] buffer;
+        buffer = nullptr;
+    }
+    size = 0;
+    custom_list* list = nullptr;
+    char ch;
+    while (1)
+    {
+        ch = _getch();
+        if (ch == 13)
+        {
+            printf("\n");
+            break;
+        }
+        else if (ch == '\b')
+        {
+            if (list != nullptr)
+            {
+                if (list->getNext() != nullptr)
+                {
+                    list->removeLast();
+                }
+                else {
+                    delete list;
+                    list = nullptr;
+                }
+                printf("\b \b");
+                size--;
+            }
+            continue;
+        }
+
+        if (list == nullptr)
+        {
+            list = new custom_list(ch);
+        }
+        else {
+            list->add(ch);
+        }
+        size++;
+        printf("%c", ch);
+    }
+    printf("\n");
+    buffer = new char[size + 1];
+    buffer[size] = '\0';
+    custom_list* first_el = list;
+    for (int i = 0; i < size; i++)
+    {
+        buffer[i] = list->get();
+        list = list->getNext();
+    }
+    if (first_el)
+    {
+        first_el->deleteList();
+    }
+
+    if (buffer == nullptr)
+    {
+        return 0;
+    }
+    return 1;
+}
+
+bool checkEquel(char*& buffer, size_t size, const char* secondBuffer, size_t sizeSecondBuffer)
+{
+    if (size != sizeSecondBuffer)
+    {
+        return 0;
+    }
+    for (int i = 0; i < size; i++)
+    {
+        if (buffer[i] != secondBuffer[i])
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+char readFile(char*& buffer, size_t& size)
+{
+    size = 0;
+    custom_list* list = nullptr;
+
+    FILE* file;
+    fopen_s(&file, "file.txt", "rb");
+    if (file)
+    {
+        char ch = ' ';
+        while (1)
+        {
+            ch = fgetc(file);
+            if (ch == -1)
+            {
+                break;
+            }
+            if (list == nullptr)
+            {
+                list = new custom_list(ch);
+            }
+            else {
+                list->add(ch);
+            }
+            size++;
+            printf("%c", ch);
+        }
+        printf("\n");
+
+        buffer = new char[size + 1];
+        buffer[size] = '\0';
+        custom_list* first_el = list;
+        for (int i = 0; i < size; i++)
+        {
+            buffer[i] = list->get();
+            list = list->getNext();
+        }
+        if (first_el)
+        {
+            first_el->deleteList();
+        }
+
+        if (buffer == nullptr)
+        {
+            return 0;
+        }
+        fclose(file);
+        return 1;
+    }
+    return 0;
+}
+
+char commandLine(char*& string, size_t& size)
+{
+    char* command = nullptr; 
+    size_t command_size = 0; 
+    while (1)
+    {
+        printf("write command: ");
+        if (!writeText(command, command_size)) {
+            return -1;
+        }
+
+        if (checkEquel(command, command_size + 1, "read from file", 15) || checkEquel(command, command_size + 1, "0", 2)) {
+            if (!readFile(string, size)) {
+                return -1;
+            }
+            break;
+        }
+        else if (checkEquel(command, command_size + 1, "read from console input", 24) || checkEquel(command, command_size + 1, "1", 2)) {
+            printf("write text: ");
+            if (!writeText(string, size)) {
+                return -1;
+            }
+            break;
+        }
+        else if (checkEquel(command, command_size + 1, "help", 5) || checkEquel(command, command_size + 1, "2", 2)) {
+            printf("command 0: read from file\ncommand 1: read from console input\ncommand 2: help\ncommand 3: exit\n\n");
+        }
+        else if (checkEquel(command, command_size + 1, "exit", 5) || checkEquel(command, command_size + 1, "3", 2)) {
+            return 0;
+        }
+        else {
+            printf("command unknown please try again\n");
+        }
+    }
+    return 1;
+}

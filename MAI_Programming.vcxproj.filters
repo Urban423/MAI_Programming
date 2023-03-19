@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="List.cpp">
+      <Filter>System\List</Filter>
+    </ClCompile>
+    <ClCompile Include="String.cpp">
+      <Filter>System\String</Filter>
+    </ClCompile>
+    <ClCompile Include="Math.cpp">
+      <Filter>System\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Laba1.cpp">
+      <Filter>Laba1</Filter>
+    </ClCompile>
+    <ClCompile Include="Laba2.cpp">
+      <Filter>Laba2</Filter>
+    </ClCompile>
+    <ClCompile Include="Console.cpp">
+      <Filter>System\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="helper.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="List.h">
+      <Filter>System\List</Filter>
+    </ClInclude>
+    <ClInclude Include="String.h">
+      <Filter>System\String</Filter>
+    </ClInclude>
+    <ClInclude Include="Math.h">
+      <Filter>System\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Laba1.h">
+      <Filter>Laba1</Filter>
+    </ClInclude>
+    <ClInclude Include="Laba2.h">
+      <Filter>Laba2</Filter>
+    </ClInclude>
+    <ClInclude Include="Console.h">
+      <Filter>System\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="helper.h">
+      <Filter>System</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="main">
+      <UniqueIdentifier>{66a6c6c2-e872-4290-bdf0-d238f644f8a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Laba1">
+      <UniqueIdentifier>{bee57cfc-a76c-4b56-921d-93d6cf2bfc7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Laba2">
+      <UniqueIdentifier>{421590b3-0cc5-41ed-b51c-b40e4a0a9e27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{bedab0ba-1a44-4463-b68c-17ee18b50f0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\String">
+      <UniqueIdentifier>{5866a9de-d397-4f76-8f2f-a8e9fc4a9523}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Console">
+      <UniqueIdentifier>{3a43e92b-4b9c-4a3c-bcc8-838d719cb9c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Math">
+      <UniqueIdentifier>{be06c318-c14b-4d60-9510-4e0054e1dd3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\List">
+      <UniqueIdentifier>{479d407f-102c-4f12-8cd5-2c0a62a18d69}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
