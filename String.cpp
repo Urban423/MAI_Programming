@@ -83,7 +83,7 @@ char String::toInteger(int& number)
         }
         else
         {
-            printf("couldn't convert from string to Integer!\n");
+            printf("couldn't convert '%s' from string to Integer!\n", (const char*)str);
             return 0;
         }
     }
@@ -117,12 +117,24 @@ char String::toInteger(unsigned int& number)
 
 char String::split(char**& buffer, unsigned int& buffer_size, unsigned char split_letter)
 {
+    if (buffer != nullptr)
+    {
+        for (int i = 0; i < buffer_size; i++)
+        {
+            delete[] buffer[i];
+        }
+        delete[] buffer;
+    }
     buffer_size = 0;
     bool flag = 0;
     unsigned int first_index = 0;
     unsigned int index = 0;
     for (unsigned int i = 0; i < size; i++)
     {
+        if (str[i] == 13)
+        {
+            continue;
+        }
         if (str[i] == '\0')
         {
             if (flag)
@@ -147,7 +159,7 @@ char String::split(char**& buffer, unsigned int& buffer_size, unsigned char spli
     buffer = new char*[buffer_size];
     for (unsigned int i = 0; i < size; i++)
     {
-        if (str[i] == split_letter || str[i] == '\0')
+        if (str[i] == split_letter || str[i] == '\0' || str[i] == 13)
         {
             int sizer = i - first_index;
             if (sizer == 0)
@@ -239,14 +251,21 @@ char String::writeText(String& string)
     return 1;
 }
 
-char String::readFromFile(String& string, const char* fileName)
+char String::readFromFile(String& string, const char* fileName, char show_content)
 {
     string.size = 0;
+    if (string.str != nullptr)
+    {
+        delete[] string.str;
+    }
     custom_list* list = nullptr;
 
     FILE* file;
     fopen_s(&file, fileName, "rb");
-    printf("        file contaiment: '");
+    if (show_content)
+    {
+        printf("        file contaiment: \n'");
+    }
     if (file)
     {
         char ch = ' ';
@@ -265,9 +284,16 @@ char String::readFromFile(String& string, const char* fileName)
                 list->add(ch);
             }
             string.size++;
-            printf("%c", ch);
+
+            if (show_content)
+            {
+                printf("%c", ch);
+            }
         }
-        printf("'\n");
+        if (show_content)
+        {
+            printf("'\n");
+        }
 
         string.str = new char[string.size + 1];
         string.str[string.size] = '\0';
@@ -281,6 +307,7 @@ char String::readFromFile(String& string, const char* fileName)
         {
             first_el->deleteList();
         }
+        string.size++;
 
         if (string.str == nullptr)
         {

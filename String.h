@@ -15,7 +15,7 @@ public:
 	char split(char**& buffer, unsigned int& buffer_size, unsigned char split_letter);
 public:
 	static char writeText(String& string);
-    static char readFromFile(String& string, const char* fileName);
+    static char readFromFile(String& string, const char* fileName, char show_content= true);
 public:
 	char& operator[](unsigned int index);
 	bool operator ==(const char* str2); 
