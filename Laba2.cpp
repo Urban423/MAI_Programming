@@ -1,9 +1,24 @@
+﻿/****************************************************************
+*                     КАФЕДРА № 304 1 КУРС                      *
+*---------------------------------------------------------------*
+* Project Type  : Win32 Console Application                     *
+* Project Name  : Laba2                                         *
+* File Name     : main.cpp                                      *
+* Language      : C/C++                                         *
+* Programmer(s) : Закусилов Л.З., Роньжин Д.А.                  *
+* Modifyed By   :                                               *
+* Lit source    :                                               *
+* Created       : 18/03/23                                      *
+* Last Revision : 19/03/23                                      *
+* Comment(s)    :работа с матрицей                              *
+****************************************************************/
 #include "Laba2.h"
 #include <stdlib.h>
 #include "String.h"
 #include <iostream>
 using namespace std;
 
+//Функция чтения матрицы из файла
 char ReadMatrixFromFile(int& width, int& height, int*& buffer)
 {
     char ret = 1;
@@ -68,7 +83,9 @@ char ReadMatrixFromFile(int& width, int& height, int*& buffer)
 
     return 1;
 }
+//Конец функции
 
+//Функция чтения матрицы из консоли
 char ReadMatrixFromConsole(int& width, int& height, int*& buffer)
 {
     String string;
@@ -111,6 +128,7 @@ char ReadMatrixFromConsole(int& width, int& height, int*& buffer)
 
     for (int j = 0; j < height; j++)
     {
+        cout << "       ";
         ret = String::writeText(string);
         if (ret == 0) {
             return 0;
@@ -128,112 +146,173 @@ char ReadMatrixFromConsole(int& width, int& height, int*& buffer)
             buffer[j * width + i] = seter;
         }
     }
+    cout << '\n';
     return 1;
 }
+//Конец функции
 
+//начало алгоритма
 int laba2()
 {
     system("title Matrix");
 
-    char ret = 0;
-    int width = 0;
-    int height = 0;
-    int* buffer = nullptr;
-    int max_summ = 0;
-    int min_summ = INT16_MAX;
-    unsigned int min_summ_index = 0;
-    unsigned int max_summ_index = 0;
-    int summ = 0;
-    String command;
+    //иницилизация переменных
+    char ret = 0;                           //переменная для опознования ошибок
+    int width = 0;                          //ширина матрицы
+    int height = 0;                         //высота матрицы
+    int* buffer = nullptr;                  //динамический масив храняци информацию о матрице
+    int max_summ = 0;                       //максимальныя сумма столбца
+    int min_summ = INT16_MAX;               //минимальная сумма столбца 
+    unsigned int min_summ_index = 0;        //номер минимальной суммы столбца 
+    unsigned int max_summ_index = 0;        //номер максимальной суммы столбца 
+    int summ = 0;                           //сумма столбцов 
+    String command;                         //строка комманды для определния потока входных данных
+    //конец иницилизации переменных
 
+
+
+    //начало цикла для заполнения матрицы(буфера) начальными значениями
     while (1)
     {
+        //спрашиваем источник входных данных (файл или ввод вручню)
         cout << "   select buffer('file' or 'console'): ";
         ret = String::writeText(command);
+        //проверка на ошибки
         if (ret == 0) {
             return 0;
         }
+        //конец если
+
+        //если источник входных данных файл
         if (command == "file")
         {
-            ret = ReadMatrixFromFile(width, height, buffer); 
+            // читаем матрицу их файла
+            ret = ReadMatrixFromFile(width, height, buffer);
+            //проверка на ошибки
             if (ret == 0) {
                 return -1;
             }
+            //конец если
+
+            //выходим из цикла
             break;
         }
+        //конец если
+        //начало если источник входных данных ввод вручную
         else if (command == "console")
         {
+            // читаем матрицу из консоли
             ret = ReadMatrixFromConsole(width, height, buffer);
-            if (ret == 0)
-            {
+            //проверка на ошибки
+            if (ret == 0) {
                 return - 1;
             }
+            //конец если
+            
+            //выходим из цикла
             break;
         }
+        //конец если
+        //буффер не определен повторяем вопрос ползователю
         cout << "   command unknown please try again\n";
     }
+    //конец цикла
    
 
+
+    //Эхо печать
+    //вывод ширины и высоты
     cout << "   w: " << width << ", " << "h: " << height << "\n   Matrix:\n";
+    //цикл для ввывода матрицы
     for (int j = 0; j < height; j++)
     {
         cout << "   ";
         for (int i = 0; i < width; i++)
         {
+            //ввывод элемениа на координате (i, j)
             cout << buffer[j * width + i] << " ";
         }
         cout << "\n";
     }
-    cout << "\n";
+    //конец цикла
+    cout << "\n   ";
+    //конец эхо печати
 
-    cout << "   ";
+
+    //начао цыкла для определения сумм 'отрицательных и нечётных' во всех столбцах
     for (int i = 0; i < width; i++)
     {
+        //сброс суммы
         summ = 0;
         for (int j = 0; j < height; j++)
         {
             int num = buffer[j * width + i];
+            // проверка что число на координата(i, j) удовлетворяет условиям 'отрицательное и нечётное'
             if (num < 0 && abs(num) % 2 == 1)
             {
+                //добавление элемента в сумму
                 summ -= num;
             }
+            //конец если
         }
+        //ввывод суммы
         cout << summ << " ";
+
+
+        //проверка что сумма больше максимальной суммы
         if (summ > max_summ)
         {
             max_summ_index = i;
             max_summ = summ;
         }
+        //конец если
+
+
+        //проверка что сумма меньше минимальной суммы
         if (summ < min_summ)
         {
             min_summ_index = i;
             min_summ = summ;
         }
+        //конец если
     }
-    cout << "\n";
-    cout << "\n";
+    //конец цикла
+
+
+    cout << "\n\n";
+    //начало цикла для того чтобы поменять столбец с максимальной и минимальной суммой
     for (int j = 0; j < height; j++)
     {
         int temp = buffer[j * width + max_summ_index];
         buffer[j * width + max_summ_index] = buffer[j * width + min_summ_index];
         buffer[j * width + min_summ_index] = temp;
     }
-    
+    //конец цикла
+
+    //цикл для вывода матрицы после преобразовний  
     for (int j = 0; j < height; j++)
     {
         cout << "   ";
         for (int i = 0; i < width; i++)
         {
+            //ввывод элемента на координате (i, j)
             cout << buffer[j * width + i] << " ";
         }
         cout << "\n";
     }
     cout << "\n";
+    //конец цикла
 
+
+
+    //чистка мусора
     if (buffer != nullptr)
     {
         delete[] buffer;
     }
+    //конец чистки мусора
 
     return 0;
-}
+}//конец программы
+
+/*********************** End of main.cpp file ******************************/
