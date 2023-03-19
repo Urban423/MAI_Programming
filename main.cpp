@@ -13,8 +13,6 @@
 * Comment(s)    :                                               *
 ****************************************************************/
 #include <stdlib.h>
-#include <stdio.h>
-#include "String.h"
 #include "Console.h"
 using namespace std;
 
@@ -23,8 +21,7 @@ int main()
 {
     system("title Console");
 
-    String buffer;
-    if (commandLine(buffer) != 1)
+    if (commandLine() != 1)
     {
         return -1;
     }

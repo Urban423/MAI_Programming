@@ -21,11 +21,14 @@
 using namespace std;
 
 //начало алгоритма
-int laba1(String& string)
+int laba1()
 {
     system("title Moda");
 
     //иницилизация переменных
+    char ret = 0;                           //переменная для опознования ошибок
+    String string;                      //строка с взодными данными
+    String filename;                      //строка с именем файла
     int counter1 = 0;
     size_t max_number = 0;              //число самого модного символа в строке
     char num = 0;                       //самое модный символ
@@ -36,6 +39,54 @@ int laba1(String& string)
 
     //заполняем массив нулями
     memset(dictionary, 0, 256);
+
+
+
+    //начало цикла для заполнения матрицы(буфера) начальными значениями
+    while (1)
+    {
+        //спрашиваем источник входных данных (файл или ввод вручню)
+        cout << "   select buffer('file' or 'console'): ";
+        ret = String::writeText(string);
+        //проверка на ошибки
+        if (ret == 0) {
+            return 0;
+        }
+        //конец если
+
+        //если источник входных данных файл
+        if (string == "file")
+        {
+            printf("   write filename: ");
+            if (!String::writeText(filename)) {
+                return -1;
+            }
+            if (!String::readFromFile(string, filename.c_str())) {
+                return -1;
+            }
+
+            //выходим из цикла
+            break;
+        }
+        //конец если
+        //начало если источник входных данных ввод вручную
+        else if (string == "console")
+        {
+            printf("   write text: ");
+            if (!String::writeText(string)) {
+                return -1;
+            }
+
+            //выходим из цикла
+            break;
+        }
+        //конец если
+        //буффер не определен повторяем вопрос ползователю
+        cout << "   command unknown please try again\n";
+    }
+    //конец цикла
+
+
 
     //начало цикла для поиска символа который встречается чаще всего
     for (int i = 0; i < string.getSize(); i++)
@@ -56,7 +107,7 @@ int laba1(String& string)
     //конец цикла
 
     //ввыводим самый символ и количество раз которое он встречается
-    cout << "\nOutput:\n'" << num << "': " << max_number << "\n";
+    cout << "\n   Output:\n   '" << num << "': " << max_number << "\n";
 
     //начало цикла для ввывода слов в которых символ встречаестя минимум 2 раза
     for (int i = 0; i < string.getSize(); i++) {
@@ -76,7 +127,7 @@ int laba1(String& string)
             if (counter == 2)
             {
                 counter1++;
-                cout << counter1 << ": ";
+                cout << "   " << counter1 << ": ";
                 //возращаемся к началу слова
                 i = number_of_first_byte;
                 //начало цикла для печати слова с как минимум 2-мя модными символами (по символьно)
