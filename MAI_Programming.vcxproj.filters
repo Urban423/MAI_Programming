@@ -22,9 +22,6 @@
     <ClCompile Include="Console.cpp">
       <Filter>System\Console</Filter>
     </ClCompile>
-    <ClCompile Include="helper.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="List.h">
@@ -44,9 +41,6 @@
     </ClInclude>
     <ClInclude Include="Console.h">
       <Filter>System\Console</Filter>
-    </ClInclude>
-    <ClInclude Include="helper.h">
-      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

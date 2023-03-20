@@ -140,7 +140,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Console.cpp" />
-    <ClCompile Include="helper.cpp" />
     <ClCompile Include="Laba1.cpp" />
     <ClCompile Include="Laba2.cpp" />
     <ClCompile Include="List.cpp" />
@@ -150,7 +149,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Console.h" />
-    <ClInclude Include="helper.h" />
     <ClInclude Include="Laba1.h" />
     <ClInclude Include="Laba2.h" />
     <ClInclude Include="List.h" />

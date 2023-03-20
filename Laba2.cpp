@@ -3,13 +3,13 @@
 *---------------------------------------------------------------*
 * Project Type  : Win32 Console Application                     *
 * Project Name  : Laba2                                         *
-* File Name     : main.cpp                                      *
+* File Name     : Laba2.cpp                                     *
 * Language      : C/C++                                         *
 * Programmer(s) : Закусилов Л.З., Роньжин Д.А.                  *
 * Modifyed By   :                                               *
 * Lit source    :                                               *
 * Created       : 18/03/23                                      *
-* Last Revision : 19/03/23                                      *
+* Last Revision : 20/03/23                                      *
 * Comment(s)    :работа с матрицей                              *
 ****************************************************************/
 #include "Laba2.h"
@@ -27,8 +27,8 @@ char ReadMatrixFromFile(int& width, int& height, int*& buffer)
     char** b = nullptr;
     unsigned int size = 0;
     char** line = nullptr;
-    unsigned int line_size = 0;
-    FILE* file;
+    int line_size = 0;
+    FILE* file = nullptr;
 
     cout << "       file name = ";
     ret = String::writeText(filename);
@@ -67,6 +67,7 @@ char ReadMatrixFromFile(int& width, int& height, int*& buffer)
         int s = 0;
         for (int j = 0; j < width; j++)
         {
+            s = 0;
             if (j < line_size)
             {
                 String stre(line[j]);
@@ -188,6 +189,7 @@ int laba2()
         {
             // читаем матрицу их файла
             ret = ReadMatrixFromFile(width, height, buffer);
+
             //проверка на ошибки
             if (ret == 0) {
                 return -1;
@@ -201,11 +203,12 @@ int laba2()
         //начало если источник входных данных ввод вручную
         else if (command == "console")
         {
-            // читаем матрицу из консоли
+
+            //ввод матрицы через консоль
             ret = ReadMatrixFromConsole(width, height, buffer);
             //проверка на ошибки
             if (ret == 0) {
-                return - 1;
+                return -1;
             }
             //конец если
             

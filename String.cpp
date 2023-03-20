@@ -115,7 +115,7 @@ char String::toInteger(unsigned int& number)
     return 1;
 }*/
 
-char String::split(char**& buffer, unsigned int& buffer_size, unsigned char split_letter)
+char String::split(char**& buffer, int& buffer_size, unsigned char split_letter)
 {
     if (buffer != nullptr)
     {
@@ -253,11 +253,6 @@ char String::writeText(String& string)
 
 char String::readFromFile(String& string, const char* fileName, char show_content)
 {
-    string.size = 0;
-    if (string.str != nullptr)
-    {
-        delete[] string.str;
-    }
     custom_list* list = nullptr;
 
     FILE* file;
@@ -268,6 +263,12 @@ char String::readFromFile(String& string, const char* fileName, char show_conten
     }
     if (file)
     {
+        string.size = 0;
+        if (string.str != nullptr)
+        {
+            delete[] string.str;
+        }
+
         char ch = ' ';
         while (1)
         {
@@ -316,7 +317,104 @@ char String::readFromFile(String& string, const char* fileName, char show_conten
         fclose(file);
         return 1;
     }
-    printf("        file dosn't exist;");
+    printf("        file dosn't exist;\n");
+    return 0;
+}
+
+char String::bruteForce(String& string)
+{
+    String helper;
+    char* helper_string = nullptr;
+    size_t helper_size = 0;
+    size_t counter = 0;
+    size_t boolean_size = pow(2, string.size - 1);
+    unsigned char* boolean = new unsigned char[boolean_size];
+    for (int i = 1; i < boolean_size; i++)
+    {
+        helper_size = 0;
+        for (int j = 0; j < string.size; j++)
+        {
+            if ((i >> j) & 1)
+            {
+                helper_size++;
+            }
+        }
+        if (helper_string != nullptr)
+        {
+            delete[] helper_string;
+        }
+        counter = 0;
+        helper_string = new char[helper_size + 1];
+        helper_string[helper_size] = 0;
+        for (int j = 0; j < string.size; j++)
+        {
+            if ((i >> j) & 1)
+            {
+                helper_string[counter] = string[j];
+                counter++;
+            }
+        }
+        helper = helper_string;
+        permutations(helper); 
+    }
+    printf("\n");
+    return 0;
+}
+
+char String::permutations(String& string)
+{
+    size_t max_number = 0;
+    size_t max_number_index = 0;
+    size_t min_el_index = string.size - 1;
+    size_t fa = factorial(string.size - 1);
+    char* massive = new char[string.size - 1];
+
+    for (int i = 0; i < string.size - 1; i++)
+    {
+        massive[i] = string[i];
+    }
+
+    for (int j = 0; j < string.size - 1; j++)
+    {
+        printf("%c", massive[j]);
+    }
+    printf("\n");
+
+    for (int i = 0; i < fa - 1; i++)
+    {
+        for (int j = 0; j < string.size - 2; j++)
+        {
+            if (max_number > massive[j + 1] && massive[min_el_index] < massive[j + 1])
+            {
+                max_number_index = j + 1;
+                max_number = massive[j + 1];
+            }
+            if (massive[j] < massive[j + 1])
+            {
+                max_number_index = j + 1;
+                max_number = massive[j + 1];
+                min_el_index = j;
+            }
+        }
+
+        size_t temp = massive[max_number_index];
+        massive[max_number_index] = massive[min_el_index];
+        massive[min_el_index] = temp;
+
+        for (int i1 = min_el_index + 1, j = string.size - 2; i1 < j; ++i1, --j)
+        {
+            temp = massive[j];
+            massive[j] = massive[i1];
+            massive[i1] = temp;
+        }
+
+        for (int j = 0; j < string.size - 1; j++)
+        {
+            printf("%c", massive[j]);
+        }
+        printf("\n");
+    }
+    //printf("\n");
     return 0;
 }
 

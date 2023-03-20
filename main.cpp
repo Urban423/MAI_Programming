@@ -9,7 +9,7 @@
 * Modifyed By   :                                               *
 * Lit source    :                                               *
 * Created       : 02/03/23                                      *
-* Last Revision : 19/03/23                                      *
+* Last Revision : 20/03/23                                      *
 * Comment(s)    :                                               *
 ****************************************************************/
 #include <stdlib.h>
@@ -19,8 +19,6 @@ using namespace std;
 //начало алгоритма
 int main()
 {
-    system("title Console");
-
     if (commandLine() != 1)
     {
         return -1;

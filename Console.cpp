@@ -1,9 +1,10 @@
 #include "Console.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include "Laba1.h"
 #include "Laba2.h"
 
-const unsigned int commands_size = 10;
+const unsigned int commands_size = 12;
 const char* const commands[]
 {
      "help",
@@ -15,7 +16,9 @@ const char* const commands[]
      "make laba1",
     "3",
      "make laba2",
-    "4",
+    "4", 
+    "permutations",
+    "5",
 };
 
 char commandLine()
@@ -23,6 +26,7 @@ char commandLine()
     String command;
     while (1)
     {
+        system("title Console");
         printf("write command: ");
         if (!String::writeText(command)) {
             return -1;
@@ -39,18 +43,23 @@ char commandLine()
         }
         else if (command == commands[4] || command == commands[5]) {
             printf("    write alphabet: ");
-            //if (!String::writeText(string)) {
-                //return -1;
-            //}
-            //const char* stri = string.c_str();
-            //size_t si = string.getSize();
-            //bruteForce(stri, si);
+            if (!String::writeText(command)) {
+                return -1;
+            }
+            String::bruteForce(command);
         }
         else if (command == commands[6] || command == commands[7]) {
             laba1();
         }
         else if (command == commands[8] || command == commands[9]) {
             laba2();
+        }
+        else if (command == commands[10] || command == commands[11]) {
+            printf("    write alphabet: ");
+            if (!String::writeText(command)) {
+                return -1;
+            }
+            String::permutations(command);
         }
         else
         {

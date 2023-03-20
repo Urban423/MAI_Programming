@@ -12,10 +12,12 @@ public:
 	unsigned int getSize();
 	char toInteger(int& number);
 	//char toInteger(unsigned int& number);
-	char split(char**& buffer, unsigned int& buffer_size, unsigned char split_letter);
+	char split(char**& buffer, int& buffer_size, unsigned char split_letter);
 public:
 	static char writeText(String& string);
     static char readFromFile(String& string, const char* fileName, char show_content= true);
+	static char bruteForce(String& string);
+	static char permutations(String& string);
 public:
 	char& operator[](unsigned int index);
 	bool operator ==(const char* str2); 

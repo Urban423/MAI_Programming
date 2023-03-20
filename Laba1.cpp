@@ -15,7 +15,6 @@
 
 #include <iostream>
 #include "Laba1.h"
-#include "helper.h"
 #include "String.h"
 #include "Math.h"
 using namespace std;
