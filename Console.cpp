@@ -4,7 +4,7 @@
 #include "Laba1.h"
 #include "Laba2.h"
 
-const unsigned int commands_size = 12;
+const unsigned int commands_size = 14;
 const char* const commands[]
 {
      "help",
@@ -13,12 +13,14 @@ const char* const commands[]
     "1",
      "brute force",
     "2",
-     "make laba1",
-    "3",
-     "make laba2",
-    "4", 
     "permutations",
+    "3",
+    "booolean",
+    "4",
+     "make laba1",
     "5",
+     "make laba2",
+    "6",
 };
 
 char commandLine()
@@ -49,17 +51,24 @@ char commandLine()
             String::bruteForce(command);
         }
         else if (command == commands[6] || command == commands[7]) {
-            laba1();
-        }
-        else if (command == commands[8] || command == commands[9]) {
-            laba2();
-        }
-        else if (command == commands[10] || command == commands[11]) {
             printf("    write alphabet: ");
             if (!String::writeText(command)) {
                 return -1;
             }
-            String::permutations(command);
+            String::permutations(command, true);
+        }
+        else if (command == commands[8] || command == commands[9]) {
+            printf("    write alphabet: ");
+            if (!String::writeText(command)) {
+                return -1;
+            }
+            String::boolean(command);
+        }
+        else if (command == commands[10] || command == commands[11]) {
+            laba1();
+        }
+        else if (command == commands[12] || command == commands[13]) {
+            laba2();
         }
         else
         {

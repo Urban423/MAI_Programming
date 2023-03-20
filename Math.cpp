@@ -20,6 +20,16 @@ unsigned int pow(unsigned int a, unsigned int b)
     return ret;
 }
 
+unsigned int pow(int a, int b)
+{
+    int ret = 1;
+    for (int i = 0; i < b; i++)
+    {
+        ret *= a;
+    }
+    return ret;
+}
+
 bool is_letter(unsigned char letter)
 {
     if (letter > 64 && letter < 91)

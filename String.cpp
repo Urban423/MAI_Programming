@@ -321,7 +321,7 @@ char String::readFromFile(String& string, const char* fileName, char show_conten
     return 0;
 }
 
-char String::bruteForce(String& string)
+char String::boolean(String& string)
 {
     String helper;
     char* helper_string = nullptr;
@@ -355,18 +355,30 @@ char String::bruteForce(String& string)
             }
         }
         helper = helper_string;
-        permutations(helper); 
+        printf("%s\n", helper.c_str());
     }
     printf("\n");
     return 0;
 }
 
-char String::permutations(String& string)
+char String::permutations(String& string, bool repeat)
 {
     size_t max_number = 0;
     size_t max_number_index = 0;
     size_t min_el_index = string.size - 1;
     size_t fa = factorial(string.size - 1);
+    if (repeat)
+    {
+        char dictionary[256] = { 0 };
+        for (int i = 0; i < string.size - 1; i++)
+        {
+            dictionary[string[i]]++;
+        }
+        for (int i = 0; i < 256; i++)
+        {
+            fa /= factorial(dictionary[i]);
+        }
+    }
     char* massive = new char[string.size - 1];
 
     for (int i = 0; i < string.size - 1; i++)
@@ -384,7 +396,7 @@ char String::permutations(String& string)
     {
         for (int j = 0; j < string.size - 2; j++)
         {
-            if (max_number > massive[j + 1] && massive[min_el_index] < massive[j + 1])
+            if (max_number >= massive[j + 1] && massive[min_el_index] < massive[j + 1])
             {
                 max_number_index = j + 1;
                 max_number = massive[j + 1];
@@ -415,7 +427,64 @@ char String::permutations(String& string)
         printf("\n");
     }
     //printf("\n");
-    return 0;
+    return 1;
+}
+
+char String::bruteForce(String& string)
+{
+    int min_size = 0;
+    int mini_summ = 0;
+    int size = string.size - 1;
+    char* summ = new char[size];
+    for (int i = 0; i < size; i++)
+    {
+        summ[i] = 0;
+    }
+    unsigned int n = pow(string.size , size) - 1;
+
+    for (unsigned int i = 0; i < n; i++)
+    {
+        summ[0]++;
+        for (int j = 0; j < size; j++)
+        {
+            if (summ[j] < string.size)
+            {
+                if (min_size < j + 1)
+                {
+                    min_size = j + 1;
+                }
+                break;
+            }
+            summ[j] = 0;
+            if (j + 1 < size)
+            {
+                summ[j + 1]++;
+            }
+        }
+        mini_summ = 0;
+        for (int j = 0; j < size; j++)
+        {
+            if (summ[j] != 0)
+            {
+                mini_summ++;
+            }
+        }
+        if (mini_summ < min_size)
+        {
+            continue;
+        }
+        for (int j = size - 1; j > -1; j--)
+        {
+            if (summ[j] == 0)
+            {
+                continue;
+            }
+            printf("%c", string[summ[j] - 1]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+    return 1;
 }
 
 char& String::operator[](unsigned int index)
