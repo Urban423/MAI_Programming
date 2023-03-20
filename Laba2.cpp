@@ -25,7 +25,7 @@ char ReadMatrixFromFile(int& width, int& height, int*& buffer)
     String string;
     String filename;
     char** b = nullptr;
-    unsigned int size = 0;
+    int size = 0;
     char** line = nullptr;
     int line_size = 0;
     FILE* file = nullptr;
@@ -93,7 +93,7 @@ char ReadMatrixFromConsole(int& width, int& height, int*& buffer)
     int seter = 0;
     char ret = 0;
     char** b = nullptr;
-    unsigned int size = 0;
+    int size = 0;
 
     cout << "       Matrix's width = ";
     while (1)
