@@ -15,21 +15,24 @@
 #include "Laba3.h"
 #include "String.h"
 #include <stdio.h>
-#include <malloc.h>
 
+//структура самолёта
 struct Plane
 {
-	int flight = 0;
-	String LA_mark = "";
-	String side_number = "";
-	int enter_way = 0;
+	int flight = 0;				//номер рейса
+	String LA_mark = "";		//марка ЛА
+	String side_number = "";	//бортовой номер
+	int enter_way = 0;			//пункт прибытия
 };
+//конец стурктуры
 
+//Функция для печати структуры
 char printPlane(Plane& plane)
 {
 	printf("%d %s %s %d", plane.flight, plane.LA_mark.c_str(), plane.side_number.c_str(), plane.enter_way);
 	return 0;
 }
+//конец функции
 
 //Функция чтения данных из файла
 char readPlanesFromFile(Plane*& planes, int& size)
