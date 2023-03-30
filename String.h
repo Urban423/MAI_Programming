@@ -23,6 +23,7 @@ public:
 	char& operator[](unsigned int index);
 	bool operator ==(const char* str2); 
 	void operator=(const char* string);
+	void operator=(String& string);
 private:
 	char* str;
 	unsigned int size;

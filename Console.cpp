@@ -3,8 +3,9 @@
 #include <stdlib.h>
 #include "Laba1.h"
 #include "Laba2.h"
+#include "Laba3.h"
 
-const unsigned int commands_size = 14;
+const unsigned int commands_size = 16;
 const char* const commands[]
 {
      "help",
@@ -21,6 +22,8 @@ const char* const commands[]
     "5",
      "make laba2",
     "6",
+     "make laba3",
+    "7",
 };
 
 char commandLine()
@@ -69,6 +72,9 @@ char commandLine()
         }
         else if (command == commands[12] || command == commands[13]) {
             laba2();
+        }
+        else if (command == commands[14] || command == commands[15]) {
+            laba3();
         }
         else
         {

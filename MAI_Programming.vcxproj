@@ -142,6 +142,7 @@
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="Laba1.cpp" />
     <ClCompile Include="Laba2.cpp" />
+    <ClCompile Include="Laba3.cpp" />
     <ClCompile Include="List.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="Console.h" />
     <ClInclude Include="Laba1.h" />
     <ClInclude Include="Laba2.h" />
+    <ClInclude Include="Laba3.h" />
     <ClInclude Include="List.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="String.h" />

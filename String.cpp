@@ -34,10 +34,6 @@ String::String(const char* string)
 String::String(const String& string)
 {
     size = string.size;
-    if (str != nullptr)
-    {
-        delete[] str;
-    }
     str = new char[size];
     for (unsigned int i = 0; i < size; i++)
     {
@@ -544,5 +540,20 @@ void String::operator=(const char* string)
     for (int i = 0; i < size; i++)
     {
         str[i] = string[i];
+    }
+}
+
+void String::operator=(String& string)
+{
+    if (str != NULL)
+    {
+        delete[] str;
+    }
+
+    size = string.size;
+    str = new char[size];
+    for (unsigned int i = 0; i < size; i++)
+    {
+        str[i] = string.str[i];
     }
 }
