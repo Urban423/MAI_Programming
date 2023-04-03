@@ -14,8 +14,10 @@
 ****************************************************************/
 #include "Laba2.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include "String.h"
 #include <iostream>
+#include "Math.h"
 using namespace std;
 
 //Функция чтения матрицы из файла
@@ -316,6 +318,206 @@ int laba2()
     //конец чистки мусора
 
     return 0;
-}//конец программы
+}
+//конец программы
+
+//сортировка слиянием
+char merge(float* numbers, unsigned int start, unsigned int end)
+{
+    unsigned int size = end - start;
+    if (size == 1)
+    {
+        return 0;
+    }
+    if (size == 2)
+    {
+        if (numbers[start] > numbers[start + 1])
+        {
+            float temp = numbers[start];
+            numbers[start] = numbers[start + 1];
+            numbers[start + 1] = temp;
+        }
+        return 0;
+    }
+
+    merge(numbers, start, start + size / 2 + 1);
+    merge(numbers, start + size / 2 + 1, end);
+
+    float* temp_planes = new float[size];
+    if (temp_planes == NULL)
+    {
+        return 1;
+    }
+    unsigned int second_start = start + size / 2 + 1;
+    unsigned int a = start;
+    unsigned int b = second_start;
+    for (unsigned int i = 0; i < size; i++)
+    {
+        if (b > end - 1 || (a < second_start && numbers[a] < numbers[b]))
+        {
+            temp_planes[i] = numbers[a];
+            a++;
+        }
+        else {
+            temp_planes[i] = numbers[b];
+            b++;
+        }
+    }
+
+    for (unsigned int i = 0; i < size; i++)
+    {
+        numbers[start + i] = temp_planes[i];
+    }
+
+    if (temp_planes != nullptr)
+    {
+        delete[] temp_planes;
+    }
+    return 0;
+}
+//конец сортирови слиянием
+
+//начало алгоритма для защиты
+int laba2Protect()
+{
+    String string;
+    FILE* file;
+    unsigned char element = 0;
+    unsigned int file_size = 0;
+    unsigned char* masses = nullptr;
+    unsigned char flag = 0;
+    unsigned int index = 0;
+    unsigned int flag_point = 0;
+    unsigned int index_of_first_number = 0;
+    bool ch2 = 0;
+
+    float X = 0;
+    printf("   write mass(X) of perfect statue: ");
+    String::writeText(string);
+    string.toFloat(X);
+
+    int T = 0;
+    printf("   write time(T) left: ");
+    String::writeText(string);
+    string.toInteger(T);
+
+    unsigned int number_of_numbers = 0;
+    float* masses_float = nullptr;
+    unsigned int ans = 0;
+
+
+    fopen_s(&file, "mass.txt", "r");
+    if (!file)
+    {
+        return -1;
+    }
+    while (1)
+    {
+        element = fgetc(file);
+        file_size++;
+        if (element == 255)
+        {
+            break;
+        }
+    }
+    fseek(file, 0, SEEK_SET);
+    masses = new unsigned char[file_size];
+    masses[file_size - 1] = '\0';
+    flag = 0;
+
+    for (unsigned int i = 0; i < file_size - 1; i++)
+    {
+        masses[i] = fgetc(file);
+
+        if (flag == 0 && is_number(masses[i]))
+        {
+            flag = 1;
+            number_of_numbers++;
+        }
+
+        if (flag == 1)
+        {
+            ch2 = masses[i] == '.' || masses[i] == ',';
+            if (ch2)
+            {
+                flag_point++;
+            }
+
+            if (!(is_number(masses[i]) || (flag_point == 1 && ch2)))
+            {
+                flag_point = 0;
+                flag = 0;
+            }
+        }
+    }
+    fclose(file);
+
+    masses_float = new float[number_of_numbers];
+    memset(masses_float, 0, number_of_numbers * sizeof(float));
+
+
+    for (unsigned int i = 0; i < file_size; i++)
+    {
+        if (flag == 1)
+        {
+            ch2 = masses[i] == '.' || masses[i] == ',';
+            if (ch2)
+            {
+                flag_point++;
+            }
+
+            if (!(is_number(masses[i]) || (flag_point == 1 && ch2)))
+            {
+                flag_point = 0;
+                flag = 0;
+
+                float tenth = pow2(10, i - index_of_first_number - 1);
+                while (index_of_first_number < i)
+                {
+                    if (masses[index_of_first_number] == '.' || masses[index_of_first_number] == ',')
+                    {
+                        masses_float[index] /= tenth * 10;
+                        tenth = 0.1f;
+                        index_of_first_number++;
+                        continue;
+                    }
+                    masses_float[index] += (masses[index_of_first_number] - 48) * tenth;
+                    tenth /= 10;
+                    index_of_first_number++;
+                }
+            }
+        }
+        
+        if (flag == 0 && is_number(masses[i]))
+        {
+            index++;
+            flag = 1;
+            index_of_first_number = i;
+        }
+    }
+
+
+    merge(masses_float, 0, number_of_numbers);
+    for (unsigned int i = 0; i < number_of_numbers; i++)
+    {
+        if (std::abs(X - masses_float[i]) == 0)
+        {
+            ans++;
+        }
+        else if (std::abs(X - masses_float[i]) < 1)
+        {
+            ans++;
+            if (ans == T)
+            {
+                break;
+            }
+        }
+    }
+
+    printf("\n   max number of statues: %d\n", ans);
+
+    return 0;
+}
+//конец программы
 
 /*********************** End of main.cpp file ******************************/

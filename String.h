@@ -11,7 +11,7 @@ public:
 	const char* c_str();
 	unsigned int getSize();
 	char toInteger(int& number);
-	//char toInteger(unsigned int& number);
+	char toFloat(float& number);
 	char split(char**& buffer, int& buffer_size, unsigned char split_letter);
 public:
 	static char writeText(String& string);

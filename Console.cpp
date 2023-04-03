@@ -5,7 +5,7 @@
 #include "Laba2.h"
 #include "Laba3.h"
 
-const unsigned int commands_size = 16;
+const unsigned int commands_size = 18;
 const char* const commands[]
 {
      "help",
@@ -22,8 +22,10 @@ const char* const commands[]
     "5",
      "make laba2",
     "6",
-     "make laba3",
+     "   laba2 protect",
     "7",
+     "make laba3",
+    "8",
 };
 
 char commandLine()
@@ -74,6 +76,9 @@ char commandLine()
             laba2();
         }
         else if (command == commands[14] || command == commands[15]) {
+            laba2Protect();
+        }
+        else if (command == commands[16] || command == commands[17]) {
             laba3();
         }
         else

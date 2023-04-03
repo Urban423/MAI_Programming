@@ -20,6 +20,16 @@ unsigned int pow(unsigned int a, unsigned int b)
     return ret;
 }
 
+float pow2(float a, float b)
+{
+    float ret = 1;
+    for (int i = 0; i < b; i++)
+    {
+        ret *= a;
+    }
+    return ret;
+}
+
 unsigned int pow(int a, int b)
 {
     int ret = 1;

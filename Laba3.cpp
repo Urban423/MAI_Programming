@@ -96,11 +96,92 @@ char readPlanesFromFile(Plane*& planes, int& size)
 //Конец функции
 
 
+
+
+//сортировка выбором
+char selectionSort(Plane* planes, unsigned int start, unsigned int end)
+{
+	unsigned int min_index = 0;
+	for (unsigned int i = start; i < end - 1; i++)
+	{
+		min_index = i;
+		for (unsigned int j = i + 1; j < end; j++)
+		{
+			if (planes[j].flight < planes[min_index].flight)
+			{
+				min_index = j;
+			}
+		}
+
+		if (min_index != i)
+		{
+			Plane temp = planes[min_index];
+			planes[min_index] = planes[i];
+			planes[i] = temp;
+		}
+	}
+	return 0;
+}
+//Конец сортировки выбором
+
+//сортировка пузыркём
+char bubbleSort(Plane* planes, unsigned int start, unsigned int end)
+{
+	char flag = 1;
+	for (unsigned int i = start; i < end - 1; i++)
+	{
+		flag = 1;
+		for (unsigned int j = start; j < end - i - 1; j++)
+		{
+			if (planes[j].flight > planes[j + 1].flight)
+			{
+				Plane temp = planes[j + 1];
+				planes[j + 1] = planes[j];
+				planes[j] = temp;
+
+				flag = 0;
+			}
+		}
+		if (flag)
+		{
+			break;
+		}
+	}
+	return 0;
+}
+//Конец сортировки пузыркём
+
+//сортировка вставками
+char insertionSort(Plane* planes, unsigned int start, unsigned int end)
+{
+	Plane temp;
+	if (planes[start].flight > planes[start + 1].flight)
+	{
+		temp = planes[start];
+		planes[start] = planes[start + 1];
+		planes[start + 1] = temp;
+	}
+
+	for (int i = start + 2; i < end; i++)
+	{
+		temp = planes[i];
+		int j = i - 1;
+		while (j >= 0 && temp.flight < planes[j].flight)
+		{
+			planes[j + 1] = planes[j];
+			j--;
+		}
+		planes[j + 1] = temp;
+	}
+	return 0;
+}
+//Конец сортировки вставками
+
 //сортировка слиянием
 char merge(Plane* planes, unsigned int start, unsigned int end)
 {
 	unsigned int size = end - start;
-	if (size == 1)
+	if (size == 1 || size == start)
 	{
 		return 0;
 	}
@@ -123,9 +204,9 @@ char merge(Plane* planes, unsigned int start, unsigned int end)
 		return 1;
 	}
 	unsigned int second_start = end / 2 + 1;
-	int a = start;
-	int b = second_start;
-	for (int i = 0; i < size; i++)
+	unsigned int a = start;
+	unsigned int b = second_start;
+	for (unsigned int i = 0; i < size; i++)
 	{
 		if (b > end - 1 || (a < second_start && planes[a].flight < planes[b].flight))
 		{
@@ -138,7 +219,7 @@ char merge(Plane* planes, unsigned int start, unsigned int end)
 		}
 	}
 
-	for (int i = 0; i < size; i++)
+	for (unsigned int i = 0; i < size; i++)
 	{
 		planes[start + i] = temp_planes[i];
 	}
@@ -149,7 +230,9 @@ char merge(Plane* planes, unsigned int start, unsigned int end)
 	}
 	return 0;
 }
-//конец ортирови слиянием
+//конец сортирови слиянием
+
+
 
 
 //начало алгоритма
@@ -178,7 +261,7 @@ int laba3()
 	//конец эхо печати
 
 	//вызов функции сортирвоки
-	ret = merge(planes, 0, size);
+	ret = insertionSort(planes, 0, size);
 	if (ret) {
 		return -1;
 	}

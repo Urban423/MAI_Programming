@@ -91,16 +91,34 @@ char String::toInteger(int& number)
     return 1;
 }
 
-/*
-char String::toInteger(unsigned int& number)
+
+char String::toFloat(float& number)
 {
     number = 0;
+    float helper = 0.1f;
+    unsigned char flag = 0;
+    unsigned char flag_points = 0;
     for (unsigned int i = 0; i < size - 1; i++)
     {
-        if (is_number(str[i]) == 1)
+        if (str[i] == '.' || str[i] == ',')
         {
-            number *= 10;
-            number += str[i] - 48;
+            flag = 1;
+            flag_points++;
+            continue;
+        }
+
+        if (is_number(str[i]) == 1 && flag_points < 2)
+        {
+            if (flag == 0)
+            {
+                number *= 10;
+                number += str[i] - 48;
+            }
+            else
+            {
+                number += (str[i] - 48) * helper;
+                helper /= 10;
+            }
         }
         else 
         {
@@ -109,7 +127,7 @@ char String::toInteger(unsigned int& number)
         }
     }
     return 1;
-}*/
+}
 
 char String::split(char**& buffer, int& buffer_size, unsigned char split_letter)
 {
