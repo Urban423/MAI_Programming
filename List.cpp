@@ -1,12 +1,12 @@
 #include "List.h"
 
-custom_list::custom_list(char elelemen)
+custom_list::custom_list(int elelemen)
 {
     element = elelemen;
     next = nullptr;
 }
 
-void custom_list::add(char elelement)
+void custom_list::add(int elelement)
 {
     if (next == nullptr)
     {
@@ -35,7 +35,7 @@ void custom_list::removeLast(custom_list* previous)
     next->removeLast(this);
 }
 
-char custom_list::get()
+int custom_list::get()
 {
     return element;
 }

@@ -14,22 +14,58 @@
 ****************************************************************/
 #include "Laba3.h"
 #include "String.h"
+#include "Table.h"
 #include <stdio.h>
+#include <fcntl.h>
+#include <io.h>
+
 
 //структура самолёта
 struct Plane
 {
 	int flight = 0;				//номер рейса
 	String LA_mark = "";		//марка ЛА
-	String side_number = "";	//бортовой номер
+	int side_number = 0;		//бортовой номер
 	int enter_way = 0;			//пункт прибытия
 };
 //конец стурктуры
 
+
+String* PlaneToString(Plane& plane)
+{
+	String* result = new String[4];
+	if (plane.flight == -1) {
+		result[0] = "ERR";
+	}
+	else {
+		String::IntegerToString(result[0], plane.flight);
+	}
+	result[1] = plane.LA_mark;
+	if (plane.side_number == -1) {
+		result[2] = "ERR";
+	}
+	else {
+		String::IntegerToString(result[2], plane.side_number);
+		result[2].add(0, 1041);
+		result[2].add(1, '-');
+	}
+	if (plane.enter_way == -1) {
+		result[3] = "ERR";
+	}
+	else {
+		String::IntegerToString(result[3], plane.enter_way);
+	}
+	return result;
+}
+
 //Функция для печати структуры
 char printPlane(Plane& plane)
 {
-	printf("%d %s %s %d", plane.flight, plane.LA_mark.c_str(), plane.side_number.c_str(), plane.enter_way);
+	printf("%d ", plane.flight);
+	printUTF8(plane.LA_mark);
+	int res = _setmode(_fileno(stdout), _O_U16TEXT);
+	wprintf(L" Б-%d %d", plane.side_number, plane.enter_way);
+	res = _setmode(_fileno(stdout), _O_TEXT);
 	return 0;
 }
 //конец функции
@@ -40,57 +76,87 @@ char readPlanesFromFile(Plane*& planes, int& size)
 	int ret = 0;
 	String file_name = "laba3.txt";
 
-	printf("   write file name: ");
-	ret = String::writeText(file_name);
-	if (ret == 0)
-	{
-		return 1;
-	}
-
-	String buffer;
-	ret = String::readFromFile(buffer, file_name.c_str(), 0);
-	if (ret == 0)
-	{
-		return 1;
-	}
-	char** lines = nullptr;
-	ret = buffer.split(lines, size, '\n');
-
-	if (planes != nullptr)
-	{
+	//clear planes
+	if (planes != nullptr) {
 		delete[] planes;
 	}
+
+	//input file name
+	printf("   write file name: ");
+	ret = writeText(file_name);
+	if (ret) {
+		return 1;
+	}
+
+	//read data from file and echo print
+	String buffer;
+	ret = readFromFile(buffer, file_name.c_str());
+	if (ret) {
+		return 1;
+	}
+
+	//prepare data
+	String* lines = nullptr;
+	ret = buffer.split(lines, size, '\n');
 	planes = new Plane[size];
-	char** line = nullptr;
+	String* line = nullptr;
 	int number_of_components = 0;
+
+	//calculate every line
 	for (int i = 0; i < size; i++)
 	{
+		//split line
 		String str(lines[i]);
 		ret = str.split(line, number_of_components, ' ');
 
+		//check for number of componetnts
 		if (number_of_components < 4)
 		{
-			return 1;
+			printf("too few arguments in line: '%d'\n", i + 1);
 		}
+		if (number_of_components > 4)
+		{
+			printf("too many arguments in line: '%d'\n", i + 1);
+		}
+
+		//check flight
 		int temp;
 		ret = String(line[0]).toInteger(temp);
 		planes[i].flight = temp;
-		if (ret == 0)
-		{
-			return 1;
+		if (ret) {
+			planes[i].flight = -1;
+			printf("'flight' corrupted on line '%d'\n", i + 1);
 		}
 
+		//check LA_mark
 		planes[i].LA_mark = line[1];
-		planes[i].side_number = line[2];
 
+		//check side_number
+		String sideNumber = line[2];
+		if (line[2][0] != 1041 || line[2][1] != '-')
+		{
+			planes[i].side_number = -1;
+			printf("'side number' corrupted on line '%d'\n", i + 1);
+		}
+		else {
+			sideNumber.remove(0);
+			sideNumber.remove(0);
+			ret = sideNumber.toInteger(temp);
+			planes[i].side_number = temp;
+			if (ret) {
+				planes[i].side_number = -1;
+				printf("'side number' corrupted on line '%d'\n", i + 1);
+			}
+		}
+
+		//check enter_way
 		ret = String(line[3]).toInteger(temp);
 		planes[i].enter_way = temp;
-		if (ret == 0)
-		{
-			return 1;
+		if (ret) {
+			planes[i].enter_way = -1;
+			printf("'enter way' corrupted on line '%d'\n", i + 1);
 		}
 	}
-
 	return 0;
 }
 //Конец функции
@@ -162,7 +228,7 @@ char insertionSort(Plane* planes, unsigned int start, unsigned int end)
 		planes[start + 1] = temp;
 	}
 
-	for (int i = start + 2; i < end; i++)
+	for (unsigned int i = start + 2; i < end; i++)
 	{
 		temp = planes[i];
 		int j = i - 1;
@@ -237,7 +303,7 @@ char merge(Plane* planes, unsigned int start, unsigned int end)
 
 //начало алгоритма
 int laba3()
-{ 
+{
 	//иницилизация переменных
 	char ret = 0;                           //переменная для опознования ошибок
 	int size = 0;							//переменнная хранящие колисечтво структур в файле
@@ -250,15 +316,15 @@ int laba3()
 		return -1;
 	}
 
+	String** t = new String*[size];
 	//эчо печать
 	for (int i = 0; i < size; i++)
 	{
-		printf("   %d) ", i);
-		printPlane(planes[i]);
-		printf("\n");
+		t[i] = PlaneToString(planes[i]);
 	}
-	printf("\n");
 	//конец эхо печати
+	Table a(t, 4, size);
+	a.drawTable();
 
 	//вызов функции сортирвоки
 	ret = insertionSort(planes, 0, size);
@@ -269,10 +335,9 @@ int laba3()
 	//печать отсортированых структур
 	for (int i = 0; i < size; i++)
 	{
-		printf("   %d) ", i);
-		printPlane(planes[i]);
-		printf("\n");
+		t[i] = PlaneToString(planes[i]);
 	}
+	a.drawTable();
 	//конец печати
 
 	//чистка мусора

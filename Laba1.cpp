@@ -46,7 +46,7 @@ int laba1()
     {
         //спрашиваем источник входных данных (файл или ввод вручню)
         cout << "   select buffer('file' or 'console'): ";
-        ret = String::writeText(string);
+        ret = writeText(string);
         //проверка на ошибки
         if (ret == 0) {
             return 0;
@@ -57,10 +57,10 @@ int laba1()
         if (string == "file")
         {
             printf("   write filename: ");
-            if (!String::writeText(filename)) {
+            if (writeText(filename)) {
                 return -1;
             }
-            if (!String::readFromFile(string, filename.c_str())) {
+            if (readFromFile(string, filename.c_str())) {
                 return -1;
             }
 
@@ -72,7 +72,7 @@ int laba1()
         else if (string == "console")
         {
             printf("   write text: ");
-            if (!String::writeText(string)) {
+            if (writeText(string)) {
                 return -1;
             }
 
@@ -88,7 +88,7 @@ int laba1()
 
 
     //начало цикла для поиска символа который встречается чаще всего
-    for (int i = 0; i < string.getSize(); i++)
+    for (unsigned int i = 0; i < string.getSize(); i++)
     {
         if (is_letter(string[i]) == 0) {
             continue;
@@ -109,7 +109,7 @@ int laba1()
     cout << "\n   Output:\n   '" << num << "': " << max_number << "\n";
 
     //начало цикла для ввывода слов в которых символ встречаестя минимум 2 раза
-    for (int i = 0; i < string.getSize(); i++) {
+    for (unsigned int i = 0; i < string.getSize(); i++) {
         //если встретился пробел то обнуляем переменные
         if (is_letter(string[i]) == 0) {
             number_of_first_byte = i + 1;

@@ -25,6 +25,9 @@
     <ClCompile Include="Laba3.cpp">
       <Filter>Laba3</Filter>
     </ClCompile>
+    <ClCompile Include="Table.cpp">
+      <Filter>System\Table</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="List.h">
@@ -47,6 +50,9 @@
     </ClInclude>
     <ClInclude Include="Laba3.h">
       <Filter>Laba3</Filter>
+    </ClInclude>
+    <ClInclude Include="Table.h">
+      <Filter>System\Table</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -76,6 +82,9 @@
     </Filter>
     <Filter Include="Laba3">
       <UniqueIdentifier>{1fa8ddf7-18cd-4dc1-9b12-14581258eb72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Table">
+      <UniqueIdentifier>{e3a76f75-c0af-4184-a12d-d29ead4a64ae}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

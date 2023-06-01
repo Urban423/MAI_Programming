@@ -5,26 +5,33 @@ class String
 public:
 	String();
 	String(const char* string);
+	String(const int* string);
 	String(const String& string);
 	~String();
 
 	const char* c_str();
-	unsigned int getSize();
+	int*& getText();
+	unsigned int& getSize();
 	char toInteger(int& number);
 	char toFloat(float& number);
-	char split(char**& buffer, int& buffer_size, unsigned char split_letter);
+	char split(String*& buffer, int& buffer_size, unsigned char split_letter);
+	char replaceSymbol(String& buffer, char SymbolToReplace, char replacement);
+	char removeSymbol(int SymbolToRemove);
+	char add(unsigned int index, int Symbol);
+	char remove(unsigned int index);
 public:
-	static char writeText(String& string);
-    static char readFromFile(String& string, const char* fileName, char show_content= true);
-	static char boolean(String& string);
-	static char permutations(String& string, bool repeat = false);
-	static char bruteForce(String& string);
+	static char IntegerToString(String& buffer, int number, int showError = 0);
 public:
-	char& operator[](unsigned int index);
-	bool operator ==(const char* str2); 
+	int& operator[](unsigned int index);
+	bool operator ==(const char* str2);
 	void operator=(const char* string);
+	void operator=(const int* string);
 	void operator=(String& string);
 private:
-	char* str;
+	int* str;
 	unsigned int size;
 };
+
+char printUTF8(String& str);
+char writeText(String& string);
+char readFromFile(String& string, const char* fileName);

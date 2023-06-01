@@ -26,18 +26,18 @@ char ReadMatrixFromFile(int& width, int& height, int*& buffer)
     char ret = 1;
     String string;
     String filename;
-    char** b = nullptr;
+    String* b = nullptr;
     int size = 0;
-    char** line = nullptr;
+    String* line = nullptr;
     int line_size = 0;
     FILE* file = nullptr;
 
     cout << "       file name = ";
-    ret = String::writeText(filename);
+    ret = writeText(filename);
     if (ret == 0) {
         return 0;
     }
-    ret = String::readFromFile(string, filename.c_str(), false);
+    ret = readFromFile(string, filename.c_str());
     if (ret == 0) {
         return 0;
     }
@@ -94,13 +94,13 @@ char ReadMatrixFromConsole(int& width, int& height, int*& buffer)
     String string;
     int seter = 0;
     char ret = 0;
-    char** b = nullptr;
+    String* b = nullptr;
     int size = 0;
 
     cout << "       Matrix's width = ";
     while (1)
     {
-        ret = String::writeText(string);
+        ret = writeText(string);
         if (ret == 0) {
             return 0;
         }
@@ -114,7 +114,7 @@ char ReadMatrixFromConsole(int& width, int& height, int*& buffer)
     cout << "       Matrix's height = ";
     while (1)
     {
-        ret = String::writeText(string);
+        ret = writeText(string);
         if (ret == 0) {
             return 0;
         }
@@ -132,7 +132,7 @@ char ReadMatrixFromConsole(int& width, int& height, int*& buffer)
     for (int j = 0; j < height; j++)
     {
         cout << "       ";
-        ret = String::writeText(string);
+        ret = writeText(string);
         if (ret == 0) {
             return 0;
         }
@@ -179,7 +179,7 @@ int laba2()
     {
         //спрашиваем источник входных данных (файл или ввод вручню)
         cout << "   select buffer('file' or 'console'): ";
-        ret = String::writeText(command);
+        ret = writeText(command);
         //проверка на ошибки
         if (ret == 0) {
             return 0;
@@ -393,12 +393,12 @@ int laba2Protect()
 
     float X = 0;
     printf("   write mass(X) of perfect statue: ");
-    String::writeText(string);
+    writeText(string);
     string.toFloat(X);
 
     int T = 0;
     printf("   write time(T) left: ");
-    String::writeText(string);
+    writeText(string);
     string.toInteger(T);
 
     unsigned int number_of_numbers = 0;
@@ -471,7 +471,7 @@ int laba2Protect()
                 flag_point = 0;
                 flag = 0;
 
-                float tenth = pow2(10, i - index_of_first_number - 1);
+                float tenth = pow(10, i - index_of_first_number - 1);
                 while (index_of_first_number < i)
                 {
                     if (masses[index_of_first_number] == '.' || masses[index_of_first_number] == ',')

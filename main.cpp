@@ -19,6 +19,7 @@ using namespace std;
 //начало алгоритма
 int main()
 {
+
     if (commandLine() != 1)
     {
         return -1;

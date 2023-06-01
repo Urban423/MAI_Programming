@@ -22,7 +22,7 @@ const char* const commands[]
     "5",
      "make laba2",
     "6",
-     "   laba2 protect",
+     "laba2 protect",
     "7",
      "make laba3",
     "8",
@@ -35,9 +35,7 @@ char commandLine()
     {
         system("title Console");
         printf("write command: ");
-        if (!String::writeText(command)) {
-            return -1;
-        }
+        writeText(command);
         if (command == commands[0] || command == commands[1]) {
             printf("commands:\n");
             for (int i = 0; i < commands_size; i+=2)
@@ -50,24 +48,18 @@ char commandLine()
         }
         else if (command == commands[4] || command == commands[5]) {
             printf("    write alphabet: ");
-            if (!String::writeText(command)) {
-                return -1;
-            }
-            String::bruteForce(command);
+            writeText(command);
+            //String::bruteForce(command);
         }
         else if (command == commands[6] || command == commands[7]) {
             printf("    write alphabet: ");
-            if (!String::writeText(command)) {
-                return -1;
-            }
-            String::permutations(command, true);
+            writeText(command);
+            //String::permutations(command, true);
         }
         else if (command == commands[8] || command == commands[9]) {
             printf("    write alphabet: ");
-            if (!String::writeText(command)) {
-                return -1;
-            }
-            String::boolean(command);
+            writeText(command);
+            //String::boolean(command);
         }
         else if (command == commands[10] || command == commands[11]) {
             laba1();
@@ -87,5 +79,6 @@ char commandLine()
         }
         printf("\n");
     }
+
     return 1;
 }
