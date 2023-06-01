@@ -395,6 +395,31 @@ void String::operator=(const char* string)
     }
 }
 
+void String::operator=(const wchar_t* string)
+{
+    if (str != nullptr)
+    {
+        delete[] str;
+    }
+    size = 0;
+    unsigned int i = 0;
+    while (1)
+    {
+        if (string[i] == '\0')
+        {
+            break;
+        }
+        this->size++;
+        i++;
+    }
+    str = new int[size + 1];
+    str[size] = '\0';
+    for (unsigned int i = 0; i < size; i++)
+    {
+        str[i] = string[i];
+    }
+}
+
 void String::operator=(const int* string)
 {
     if (str != nullptr)

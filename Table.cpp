@@ -78,7 +78,7 @@ Table::Table(String** string, unsigned int width, unsigned int height)
 				cell_size = temp;
 			}
 		}
-		cell_size += 2;
+		cell_size += 6;
 		size_of_cells[x] = cell_size;
 	}
 }
@@ -136,9 +136,11 @@ char Table::drawCells(int number_of_cells, unsigned int* size_of_cell, unsigned 
 	wprintf(L"%c", vertical);
 	for (int x = 0; x < number_of_cells; x++)
 	{
+		int s1 = (size_of_cell[x] - table[row_index][x].getSize()) / 2;
+		for (unsigned int i = 0; i < s1; i++) { wprintf(L" "); }
 		printUTF8(table[row_index][x]);
 		int res = _setmode(_fileno(stdout), _O_U16TEXT);
-		for (unsigned int i = 0; i < size_of_cell[x] - table[row_index][x].getSize(); i++) { wprintf(L" "); }
+		for (unsigned int i = 0; i < size_of_cell[x] - table[row_index][x].getSize() - s1; i++) { wprintf(L" "); }
 
 		if (x == number_of_cells - 1) { break; }
 		wprintf(L"%c", vertical);

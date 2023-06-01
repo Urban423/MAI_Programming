@@ -25,6 +25,7 @@ public:
 	int& operator[](unsigned int index);
 	bool operator ==(const char* str2);
 	void operator=(const char* string);
+	void operator=(const wchar_t* string);
 	void operator=(const int* string);
 	void operator=(String& string);
 private:

@@ -308,6 +308,8 @@ int laba3()
 	char ret = 0;                           //переменная для опознования ошибок
 	int size = 0;							//переменнная хранящие колисечтво структур в файле
 	Plane* planes = nullptr;				//динамичесуий массив структур
+	String** t;								//массив массивов строк для таблицы
+
 	//конец иницилизации переменных
 
 	//чтнение дыннх из файла
@@ -316,14 +318,19 @@ int laba3()
 		return -1;
 	}
 
-	String** t = new String*[size];
+	t = new String*[size + 1];
+	t[0] = new String[4];
+	t[0][0] = L"Номер рейса";
+	t[0][1] = L"Марка ЛА";
+	t[0][2] = L"Бортовой номер";
+	t[0][3] = L"Пункт прибытия";
 	//эчо печать
 	for (int i = 0; i < size; i++)
 	{
-		t[i] = PlaneToString(planes[i]);
+		t[i + 1] = PlaneToString(planes[i]);
 	}
 	//конец эхо печати
-	Table a(t, 4, size);
+	Table a(t, 4, size + 1);
 	a.drawTable();
 
 	//вызов функции сортирвоки
@@ -335,7 +342,7 @@ int laba3()
 	//печать отсортированых структур
 	for (int i = 0; i < size; i++)
 	{
-		t[i] = PlaneToString(planes[i]);
+		t[i + 1] = PlaneToString(planes[i]);
 	}
 	a.drawTable();
 	//конец печати
