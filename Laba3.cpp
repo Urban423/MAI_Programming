@@ -5,7 +5,7 @@
 * Project Name  : Laba3                                         *
 * File Name     : Laba3.cpp                                     *
 * Language      : C/C++                                         *
-* Programmer(s) : Закусилов Л.З., Роньжин Д.А.                  *
+* Programmer(s) : Закусилов Л.З.                                *
 * Modifyed By   :                                               *
 * Lit source    :                                               *
 * Created       : 29/03/23                                      *
@@ -15,6 +15,7 @@
 #include "Laba3.h"
 #include "String.h"
 #include "Table.h"
+#include <vector>
 #include <stdio.h>
 #include <fcntl.h>
 #include <io.h>
@@ -34,27 +35,19 @@ struct Plane
 String* PlaneToString(Plane& plane)
 {
 	String* result = new String[4];
-	if (plane.flight == -1) {
-		result[0] = "ERR";
+	String::IntegerToString(result[0], plane.flight);
+	while (result[0].getSize() < 3)
+	{
+		result[0].add(0, '0');
 	}
-	else {
-		String::IntegerToString(result[0], plane.flight);
-	}
+
 	result[1] = plane.LA_mark;
-	if (plane.side_number == -1) {
-		result[2] = "ERR";
-	}
-	else {
-		String::IntegerToString(result[2], plane.side_number);
-		result[2].add(0, 1041);
-		result[2].add(1, '-');
-	}
-	if (plane.enter_way == -1) {
-		result[3] = "ERR";
-	}
-	else {
-		String::IntegerToString(result[3], plane.enter_way);
-	}
+
+	String::IntegerToString(result[2], plane.side_number);
+	result[2].add(0, 1041);
+	result[2].add(1, '-');
+
+	String::IntegerToString(result[3], plane.enter_way);
 	return result;
 }
 
@@ -71,22 +64,18 @@ char printPlane(Plane& plane)
 //конец функции
 
 //Функция чтения данных из файла
-char readPlanesFromFile(Plane*& planes, int& size)
+char readPlanesFromFile(String**& planes, int& size, int*& cells_size)
 {
 	int ret = 0;
 	String file_name = "laba3.txt";
 
-	//clear planes
-	if (planes != nullptr) {
-		delete[] planes;
-	}
-
+	/*
 	//input file name
 	printf("   write file name: ");
 	ret = writeText(file_name);
 	if (ret) {
 		return 1;
-	}
+	}*/
 
 	//read data from file and echo print
 	String buffer;
@@ -98,70 +87,130 @@ char readPlanesFromFile(Plane*& planes, int& size)
 	//prepare data
 	String* lines = nullptr;
 	ret = buffer.split(lines, size, '\n');
-	planes = new Plane[size];
-	String* line = nullptr;
-	int number_of_components = 0;
+	planes = new String*[size];
+	cells_size = new int[size];
 
 	//calculate every line
 	for (int i = 0; i < size; i++)
 	{
 		//split line
 		String str(lines[i]);
-		ret = str.split(line, number_of_components, ' ');
-
-		//check for number of componetnts
-		if (number_of_components < 4)
-		{
-			printf("too few arguments in line: '%d'\n", i + 1);
-		}
-		if (number_of_components > 4)
-		{
-			printf("too many arguments in line: '%d'\n", i + 1);
-		}
-
-		//check flight
-		int temp;
-		ret = String(line[0]).toInteger(temp);
-		planes[i].flight = temp;
-		if (ret) {
-			planes[i].flight = -1;
-			printf("'flight' corrupted on line '%d'\n", i + 1);
-		}
-
-		//check LA_mark
-		planes[i].LA_mark = line[1];
-
-		//check side_number
-		String sideNumber = line[2];
-		if (line[2][0] != 1041 || line[2][1] != '-')
-		{
-			planes[i].side_number = -1;
-			printf("'side number' corrupted on line '%d'\n", i + 1);
-		}
-		else {
-			sideNumber.remove(0);
-			sideNumber.remove(0);
-			ret = sideNumber.toInteger(temp);
-			planes[i].side_number = temp;
-			if (ret) {
-				planes[i].side_number = -1;
-				printf("'side number' corrupted on line '%d'\n", i + 1);
-			}
-		}
-
-		//check enter_way
-		ret = String(line[3]).toInteger(temp);
-		planes[i].enter_way = temp;
-		if (ret) {
-			planes[i].enter_way = -1;
-			printf("'enter way' corrupted on line '%d'\n", i + 1);
-		}
+		ret = str.split(planes[i], cells_size[i], ' ');
 	}
 	return 0;
 }
 //Конец функции
 
 
+
+char errorHandler(Plane*& planes, int& real_size, String** planesStr, int size, int* cell_size)
+{
+	int res = _setmode(_fileno(stdout), _O_U16TEXT);
+	int ret = 0;
+	real_size = 0;
+	int index = 0;
+	for (int i = 0; i < size; i++)
+	{
+		real_size++;
+
+		//check for number of componetnts
+		if (cell_size[i] < 4)
+		{
+			wprintf(L"Слишком мало аргументов в строке номер: '%d'\n", i + 1);
+			real_size--;
+			continue;
+		}
+		if (cell_size[i] > 4)
+		{
+			wprintf(L"Слишком много аргументов в строке номер: '%d'\n", i + 1);
+			real_size--;
+			continue;
+		}
+
+		//check flight
+		int temp;
+		ret = String(planesStr[i][0]).toInteger(temp);
+		if (ret || temp > 999) {
+			wprintf(L"'Номер рейса' не верный на строке '%d'\n", i + 1);
+			real_size--;
+			continue;
+		}
+
+		//check side_number
+		String sideNumber = planesStr[i][2];
+		if (planesStr[i][2][0] != 1041 || planesStr[i][2][1] != '-')
+		{
+			wprintf(L"'Бортовой номер' повреждён на строке '%d'\n", i + 1);
+			real_size--;
+			continue;
+		}
+		else {
+			sideNumber.remove(0);
+			sideNumber.remove(0);
+			ret = sideNumber.toInteger(temp);
+			if (ret) {
+				wprintf(L"'Бортовой номер' повреждён на строке '%d'\n", i + 1);
+				real_size--;
+				continue;
+			}
+		}
+
+		//check enter_way
+		ret = String(planesStr[i][3]).toInteger(temp);
+		if (ret || temp > 99) {
+			wprintf(L"'Пункт прибытия' повреждён на строке '%d'\n", i + 1);
+			real_size--;
+			continue;
+		}
+	}
+	res = _setmode(_fileno(stdout), _O_TEXT);
+
+	planes = new Plane[real_size];
+	for (int i = 0; i < size; i++)
+	{
+		//check for number of componetnts
+		if (cell_size[i] < 4 || cell_size[i] > 4)
+		{
+			continue;
+		}
+
+		//check flight
+		int temp;
+		ret = planesStr[i][0].toInteger(temp);
+		planes[index].flight = temp;
+		if (ret || temp > 999) {
+			continue;
+		}
+
+		//check LA_mark
+		planes[index].LA_mark = planesStr[i][1];
+
+		//check side_number
+		String sideNumber = planesStr[i][2];
+		if (planesStr[i][2][0] != 1041 || planesStr[i][2][1] != '-')
+		{
+			continue;
+		}
+		else {
+			sideNumber.remove(0);
+			sideNumber.remove(0);
+			ret = sideNumber.toInteger(temp);
+			planes[index].side_number = temp;
+			if (ret) {
+				continue;
+			}
+		}
+
+		//check enter_way
+		ret = planesStr[i][3].toInteger(temp);
+		planes[index].enter_way = temp;
+		if (ret || temp > 99) {
+			continue;
+		}
+		index++;
+	}
+	return 0;
+}
 
 
 //сортировка выбором
@@ -193,6 +242,10 @@ char selectionSort(Plane* planes, unsigned int start, unsigned int end)
 //сортировка пузыркём
 char bubbleSort(Plane* planes, unsigned int start, unsigned int end)
 {
+	if (end < 1)
+	{
+		return 0;
+	}
 	char flag = 1;
 	for (unsigned int i = start; i < end - 1; i++)
 	{
@@ -307,52 +360,64 @@ int laba3()
 	//иницилизация переменных
 	char ret = 0;                           //переменная для опознования ошибок
 	int size = 0;							//переменнная хранящие колисечтво структур в файле
-	Plane* planes = nullptr;				//динамичесуий массив структур
-	String** t;								//массив массивов строк для таблицы
+	String** string_table;				    //массив массивов строк для таблицы
+	int* cells_size;				    //массив массивов строк для таблицы
 
+	Plane* planeVector;            //динамичесуий массив структур
+	int planeVectorSize = 0;
 	//конец иницилизации переменных
 
+
 	//чтнение дыннх из файла
-	ret = readPlanesFromFile(planes, size);
+	ret = readPlanesFromFile(string_table, size, cells_size);
 	if (ret) {
 		return -1;
 	}
 
-	t = new String*[size + 1];
+	for (int i = 0; i < size; i++)
+	{
+		printf("%d) ", i + 1);
+		for (int j = 0; j < cells_size[i]; j++)
+		{
+			printUTF8(string_table[i][j]);
+			printf(" ");
+		}
+		printf("\n");
+	}
+
+	ret = errorHandler(planeVector, planeVectorSize, string_table, size, cells_size);
+
+	String** t = new String*[planeVectorSize + 1]; 
 	t[0] = new String[4];
 	t[0][0] = L"Номер рейса";
 	t[0][1] = L"Марка ЛА";
 	t[0][2] = L"Бортовой номер";
 	t[0][3] = L"Пункт прибытия";
 	//эчо печать
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < planeVectorSize; i++)
 	{
-		t[i + 1] = PlaneToString(planes[i]);
+		t[i + 1] = PlaneToString(planeVector[i]);
 	}
 	//конец эхо печати
-	Table a(t, 4, size + 1);
+	Table a(t, 4, planeVectorSize + 1);
 	a.drawTable();
 
 	//вызов функции сортирвоки
-	ret = insertionSort(planes, 0, size);
+	ret = bubbleSort(planeVector, 0, planeVectorSize);
 	if (ret) {
 		return -1;
 	}
 
+	String text;
+	text = L"\nОтсортированная таблица:\n";
+	printUTF8(text);
 	//печать отсортированых структур
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < planeVectorSize; i++)
 	{
-		t[i + 1] = PlaneToString(planes[i]);
+		t[i + 1] = PlaneToString(planeVector[i]);
 	}
 	a.drawTable();
 	//конец печати
-
-	//чистка мусора
-	if (planes != nullptr)
-	{
-		delete[] planes;
-	}
-	//конец чистки мусора
 
 	return 0;
 }//конец программы

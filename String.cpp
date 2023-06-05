@@ -70,7 +70,7 @@ String::~String()
 {
     if (str != nullptr)
     {
-        delete[] str;
+        //delete[] str;
     }
 }
 
@@ -165,10 +165,6 @@ char String::toFloat(float& number)
 
 char String::split(String*& buffer, int& buffer_size, unsigned char split_letter)
 {
-    if (buffer != nullptr)
-    {
-       delete[] buffer;
-    }
     buffer_size = 0;
     bool flag = 0;
     unsigned int first_index = 0;
@@ -209,18 +205,17 @@ char String::split(String*& buffer, int& buffer_size, unsigned char split_letter
                 continue;
             }
 
-            int* temp = new int[sizer + 1];
-            temp[sizer] = '\0';
+            buffer[index].str = new int[sizer + 1];
+            buffer[index].size = sizer;
+            buffer[index].str[sizer] = '\0';
             unsigned int j = first_index;
             unsigned int index_inside = 0;
             while (j < i)
             {
-                temp[index_inside] = str[j];
+                buffer[index].str[index_inside] = str[j];
                 index_inside++;
                 j++;
             }
-            buffer[index] = temp;
-            delete[] temp;
             index++;
             first_index = i + 1;
         }
@@ -397,10 +392,6 @@ void String::operator=(const char* string)
 
 void String::operator=(const wchar_t* string)
 {
-    if (str != nullptr)
-    {
-        delete[] str;
-    }
     size = 0;
     unsigned int i = 0;
     while (1)
@@ -420,37 +411,11 @@ void String::operator=(const wchar_t* string)
     }
 }
 
-void String::operator=(const int* string)
-{
-    if (str != nullptr)
-    {
-        delete[] str;
-    }
-    size = 0;
-    unsigned int i = 0;
-    while (1)
-    {
-        if (string[i] == '\0')
-        {
-            break;
-        }
-        this->size++;
-        i++;
-    }
-    str = new int[size + 1];
-    str[size] = '\0';
-    for (unsigned int i = 0; i < size; i++)
-    {
-        str[i] = string[i];
-    }
-}
+
 
 void String::operator=(String& string)
 {
-    if (str != nullptr)
-    {
-        delete[] str;
-    }
+    
 
     size = string.size;
     str = new int[size + 1];
@@ -551,9 +516,6 @@ char readFromFile(String& string, const char* fileName)
 
     //clear string buffer
     string.getSize() = 0;
-    if (string.getText() != nullptr)  {
-        delete[] string.getText();
-    }
 
     //get file size
     while (1)
